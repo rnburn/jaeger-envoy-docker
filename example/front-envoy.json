@@ -1,0 +1,74 @@
+{
+  "listeners": [
+    {
+      "address": "tcp://0.0.0.0:8080",
+      "filters": [
+        {
+          "type": "read",
+          "name": "http_connection_manager",
+          "config": {
+            "codec_type": "auto",
+            "stat_prefix": "ingress_http",
+            "tracing": {
+              "operation_name": "ingress"
+            },
+            "route_config": {
+              "virtual_hosts": [
+                {
+                  "name": "backend",
+                  "domains": ["*"],
+                  "routes": [
+                    {
+                      "timeout_ms": 0,
+                      "prefix": "/",
+                      "cluster": "service1"
+                    }
+                  ]
+                }
+              ]
+            },
+            "filters": [
+              {
+                "type": "decoder",
+                "name": "router",
+                "config": {}
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "tracing": {
+    "http": {
+      "driver": {
+        "type": "dynamic",
+        "config": {
+          "library": "/usr/local/lib/libjaegertracing.so",
+          "config_file": "/etc/envoy-jaeger.yaml"
+        }
+      }
+    }
+  },
+  "admin": {
+    "access_log_path": "/dev/null",
+    "address": "tcp://0.0.0.0:8001"
+  },
+  "cluster_manager": {
+    "clusters": [
+      {
+        "name": "service1",
+        "connect_timeout_ms": 250,
+        "type": "strict_dns",
+        "lb_type": "round_robin",
+        "features": "http2",
+        "hosts": [
+          {
+            "url": "tcp://0.0.0.0:9001",
+            "url": "tcp://0.0.0.0:9002"
+          }
+        ]
+      }
+    ]
+  }
+}

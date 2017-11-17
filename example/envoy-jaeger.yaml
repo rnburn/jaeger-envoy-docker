@@ -1,0 +1,14 @@
+service_name: envoy
+disabled: false
+sampler:
+  type: const
+  param: 1
+reporter:
+  localAgentHostPort: $JAEGER_PORT_6831_UDP_ADDR:$JAEGER_PORT_6831_UDP_PORT
+headers:
+  jaegerDebugHeader: jaeger-debug-id
+  jaegerBaggageHeader: jaeger-baggage
+  traceBaggageHeaderPrefix: uberctx-
+baggage_restrictions:
+  denyBaggageOnInitializationFailure: false
+  hostPort: ""
