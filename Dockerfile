@@ -25,10 +25,10 @@ RUN set -x \
               m4 \
   && cd "$tempDir" \
 # Build OpenTracing
-  && git clone https://github.com/opentracing/opentracing-cpp.git \
+  && git clone -b dlopen https://github.com/rnburn/opentracing-cpp.git \
   && cd opentracing-cpp \
   && mkdir .build && cd .build \
-  && cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=OFF .. \
+  && cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=OFF -DCMAKE_CXX_FLAGS="-fPIC" .. \
   && make && make install \
   && cd "$tempDir" \
 ## Build jaeger

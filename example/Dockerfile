@@ -1,4 +1,4 @@
-FROM rnburn/envoy-jaeger:0.11
+FROM rnburn/envoy-jaeger:0.12
 
 WORKDIR /app
 
