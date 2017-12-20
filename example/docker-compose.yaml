@@ -5,6 +5,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile-front
+    privileged: true
     networks:
       envoymesh:
         aliases:
@@ -18,6 +19,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile-back
+    privileged: true
     networks:
       envoymesh:
         aliases:
