@@ -4,7 +4,7 @@ sampler:
   type: const
   param: 1
 reporter:
-  localAgentHostPort: $JAEGER_PORT_6831_UDP_ADDR:$JAEGER_PORT_6831_UDP_PORT
+  localAgentHostPort: $JAEGER_AGENT_HOST:6831
 headers:
   jaegerDebugHeader: jaeger-debug-id
   jaegerBaggageHeader: jaeger-baggage

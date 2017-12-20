@@ -1,0 +1,19 @@
+FROM rnburn/envoy-jaeger:0.13
+
+WORKDIR /app
+
+ADD . /app
+
+RUN  apt-get update \
+  && apt-get install --no-install-recommends --no-install-suggests -y \
+              build-essential \
+              gettext \
+              vim \
+              gdb
+
+EXPOSE 8080
+EXPOSE 8001
+EXPOSE 8002
+EXPOSE 8003
+
+ENTRYPOINT /app/start_front.sh

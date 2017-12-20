@@ -21,7 +21,7 @@
                     {
                       "timeout_ms": 0,
                       "prefix": "/",
-                      "cluster": "service1"
+                      "cluster": "hello_service"
                     }
                   ]
                 }
@@ -44,7 +44,7 @@
       "driver": {
         "type": "dynamic",
         "config": {
-          "library": "/usr/local/lib/libjaegertracing.so",
+          "library": "/usr/local/lib/libjaegertracingd.so",
           "config_file": "/etc/envoy-jaeger.yaml"
         }
       }
@@ -57,15 +57,14 @@
   "cluster_manager": {
     "clusters": [
       {
-        "name": "service1",
+        "name": "hello_service",
         "connect_timeout_ms": 250,
         "type": "strict_dns",
         "lb_type": "round_robin",
         "features": "http2",
         "hosts": [
           {
-            "url": "tcp://0.0.0.0:9001",
-            "url": "tcp://0.0.0.0:9002"
+            "url": "tcp://hello-service1:8080"
           }
         ]
       }
