@@ -54,7 +54,7 @@ RUN set -x \
 	\
   && cd "$tempDir" \
 ## Build envoy
-  && git clone -b jaeger https://github.com/rnburn/envoy.git \
+  && git clone -b dynamic-tracing https://github.com/rnburn/envoy.git \
   && cd envoy \
   && bazel fetch //source/... \
   && bazel build -c dbg //source/exe:envoy-static \
