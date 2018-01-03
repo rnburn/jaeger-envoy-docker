@@ -1,0 +1,42 @@
+admin:
+  access_log_path: /dev/null
+  address:
+    socket_address: { address: 0.0.0.0, port_value: 8082 }
+
+tracing:
+  http:
+    name: envoy.dynamic
+    config:
+      library: /usr/local/lib/libjaegertracingd.so
+      config_file: /etc/envoy-jaeger.yaml
+
+static_resources:
+  listeners:
+  - name: listener_0
+    address:
+      socket_address: { address: 0.0.0.0, port_value: 8080 }
+    filter_chains:
+    - filters:
+      - name: envoy.http_connection_manager
+        config:
+          stat_prefix: ingress_http
+          codec_type: AUTO
+          tracing:
+            operation_name: ingress
+          route_config:
+            name: local_route
+            virtual_hosts:
+            - name: local_service
+              domains: ["*"]
+              routes:
+              - match: { prefix: "/" }
+                route: { cluster: local_service }
+          http_filters:
+          - name: envoy.router
+  clusters:
+  - name: local_service
+    connect_timeout: 0.25s
+    type: STRICT_DNS
+    lb_policy: ROUND_ROBIN
+    hosts: [{ socket_address: { address: 127.0.0.1, port_value: 5001 }}]
+
