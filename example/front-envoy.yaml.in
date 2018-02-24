@@ -1,14 +1,28 @@
 admin:
   access_log_path: /dev/null
   address:
-    socket_address: { address: 0.0.0.0, port_value: 8082 }
+    socket_address: { address: 0.0.0.0, port_value: 8081 }
 
 tracing:
   http:
-    name: envoy.dynamic
+    name: envoy.dynamic.ot
     config:
       library: /usr/local/lib/libjaegertracingd.so
-      config_file: /etc/envoy-jaeger.yaml
+      config:
+        service_name: envoy
+        disabled: false
+        sampler:
+          type: const
+          param: 1
+        reporter:
+          localAgentHostPort: $JAEGER_AGENT_HOST:6831
+        headers:
+          jaegerDebugHeader: jaeger-debug-id
+          jaegerBaggageHeader: jaeger-baggage
+          traceBaggageHeaderPrefix: uberctx-
+        baggage_restrictions:
+          denyBaggageOnInitializationFailure: false
+          hostPort: ""
 
 static_resources:
   listeners:
@@ -30,13 +44,12 @@ static_resources:
               domains: ["*"]
               routes:
               - match: { prefix: "/" }
-                route: { cluster: local_service }
+                route: { cluster: hello_service }
           http_filters:
           - name: envoy.router
   clusters:
-  - name: local_service
+  - name: hello_service
     connect_timeout: 0.25s
     type: STRICT_DNS
     lb_policy: ROUND_ROBIN
-    hosts: [{ socket_address: { address: 127.0.0.1, port_value: 5001 }}]
-
+    hosts: [{ socket_address: { address: hello-service1, port_value: 8080 }}]
